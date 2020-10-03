@@ -1,0 +1,16 @@
+{
+    "_id": "<objectId>",
+    "title": "<string>",
+    "total": "<decimal>",
+    "average": "<decimal>",
+    "students": [{
+        "name": "<string>",
+        "total_trip_expenses": "<decimal>"
+    }],
+    "expenses": [{
+      "student_name": "<string>",
+      "amount": "<decimal>",
+      "type": "<string>",
+      "date": "<date>"
+    }]
+  }
