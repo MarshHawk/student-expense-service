@@ -1,5 +1,5 @@
 ### Start up
-- In addition to npm install, we also need docker to host a mongo database. Please make sure  you have docker installed on your OS:
+- In addition to npm install, we also need docker to host a mongo database. Please make sure you have docker installed and started on your OS:
 ```
 docker --version
 ```

@@ -1,6 +1,9 @@
-import { Schema, Types, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-const tripSchema = new Schema({
+const Schema = mongoose.Schema;
+const Types = mongoose.Types;
+
+export const tripSchema = new Schema({
     title: String,
     total: Types.Decimal128,
     average: Types.Decimal128,
@@ -16,6 +19,7 @@ const tripSchema = new Schema({
       }]
   }, { timestamps: true });
 
-  const Trip = model('Trip', tripSchema);
+//export const Trip = model('Trip', tripSchema);
 
-  export default Trip;
+ //export Trip;
+//export default model('trip', tripSchema);;
