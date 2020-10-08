@@ -9,7 +9,7 @@ export const tripSchema = new Schema({
     average: Types.Decimal128,
     students: [{
         name: String,
-        total_trip_expenses: Types.Decimal128
+        total_trip_expenses: Types.Decimal128,
     }],
     expenses: [{
         student_name: String,
@@ -18,8 +18,3 @@ export const tripSchema = new Schema({
         date: Date
       }]
   }, { timestamps: true });
-
-//export const Trip = model('Trip', tripSchema);
-
- //export Trip;
-//export default model('trip', tripSchema);;
