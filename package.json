@@ -8,7 +8,7 @@
     "serve": "node ./build/server",
     "watch": "nodemon",
     "build": "rm -rf ./build && tsc --project tsconfig.json",
-    "test": "jest"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "helmet": "^4.1.1",
     "mongoose": "^5.10.7"
   }
 }

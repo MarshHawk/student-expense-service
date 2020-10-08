@@ -1,21 +1,22 @@
-import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import routes from './routes/trip.route';
-// mongodb-memory-server is only used to ship this exercise with npm install only
+import helmet from 'helmet';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { config } from "dotenv";
+import { app } from './app'
 import { seedTrips } from './gateways/trip.gateway';
 config();
 
 const PORT = process.env.PORT || 3033;
-const app = express();
 
-//TODO cors .env configuration
+// TODO cors .env configuration
 app.use(cors({
     origin: '*',
     credentials: true
 }));
+
+app.use(helmet());
 
 routes(app);
 
