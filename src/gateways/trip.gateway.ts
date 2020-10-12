@@ -1,16 +1,20 @@
-import { Request, Response } from "express";
 import mongoose from 'mongoose';
 import { tripSchema } from '../models/trip.model';
-import { IExpense } from "../interfaces";
+import { ITrip } from "../interfaces";
 
 const Trip = mongoose.model('Trip', tripSchema);
 
 // Reads
 
-export const getTrips = (): Promise<any[]> => {
-    return Trip.aggregate([
+export const getTrips = (): Promise<ITrip[]> => {
+    return Trip.aggregate<ITrip>([
+        { $addFields: { id: { $toString: "$_id" } } },
         { $project: { _id: 0 } }
     ]).exec();
+}
+
+export const getTripById = (id: string): Promise<ITrip> => {
+    throw 'Not implemented'
 }
 
 // Writes

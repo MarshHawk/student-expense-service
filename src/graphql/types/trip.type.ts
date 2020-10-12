@@ -1,29 +1,17 @@
 import { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLFloat, GraphQLList, GraphQLID } from 'graphql';
-import { GraphQLDateTime, GraphQLNonEmptyString, GraphQLNonNegativeFloat, } from 'graphql-scalars';
+import { GraphQLDateTime } from 'graphql-scalars';
 import tripEventType from './trip-event.type';
 import studentType from './student.type';
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { addExpenseToTrip } from '../../gateways/trip.gateway';
-
-/* const { nodeInterface, nodeField } = nodeDefinitions(
-    (globalId) => {
-      const { type, id } = fromGlobalId(globalId);
-      if (type === 'Faction') {
-        return getFaction(id);
-      }
-      if (type === 'Ship') {
-        return getShip(id);
-      }
-    },
-    (obj) => (obj.ships ? factionType : shipType),
-  ); */
+import { globalIdField } from 'graphql-relay';
+import { nodeInterface } from '../node';
+import { ITrip } from '../../interfaces';
 
 // TODO: node interface and global id
-export const tripType = new GraphQLObjectType({
+export const tripType: GraphQLObjectType<ITrip, any> = new GraphQLObjectType({
     name: 'Trip',
-    //interfaces: [nodeInterface],
+    interfaces: [nodeInterface],
     fields: () => ({
-        //id: globalIdField(),
+        id: globalIdField(),
         title: {
             type: GraphQLNonNull(GraphQLString)
         },

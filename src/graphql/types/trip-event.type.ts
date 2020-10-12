@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt, GraphQLFloat } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql';
 import { GraphQLDateTime } from 'graphql-scalars';
 
 export default new GraphQLObjectType({
