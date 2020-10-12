@@ -1,7 +1,20 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLFloat, GraphQLList } from 'graphql';
 import { GraphQLDateTime, } from 'graphql-scalars';
 import tripEventType from './trip-event.type';
 import studentType from './student.type';
+
+/* const { nodeInterface, nodeField } = nodeDefinitions(
+    (globalId) => {
+      const { type, id } = fromGlobalId(globalId);
+      if (type === 'Faction') {
+        return getFaction(id);
+      }
+      if (type === 'Ship') {
+        return getShip(id);
+      }
+    },
+    (obj) => (obj.ships ? factionType : shipType),
+  ); */
 
 // TODO: node interface and global id
 export default new GraphQLObjectType({
@@ -10,7 +23,7 @@ export default new GraphQLObjectType({
     fields: () => ({
         //id: globalIdField(),
         title: {
-            type: GraphQLString
+            type: GraphQLNonNull(GraphQLString)
         },
         startTime: {
             type: GraphQLDateTime
@@ -19,16 +32,16 @@ export default new GraphQLObjectType({
             type: GraphQLDateTime
         },
         total: {
-            type: GraphQLFloat
+            type: GraphQLNonNull(GraphQLFloat)
         },
         average: {
-            type: GraphQLFloat
+            type: GraphQLNonNull(GraphQLFloat)
         },
         students: {
-            type: studentType
+            type: GraphQLList(studentType)
         },
-        events: {
-            type: tripEventType
+        expenses: {
+            type: GraphQLList(tripEventType)
         }
     }),
 });

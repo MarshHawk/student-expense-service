@@ -9,10 +9,10 @@ export const tripSchema = new Schema({
     average: Types.Decimal128,
     students: [{
         name: String,
-        total_trip_expenses: Types.Decimal128,
+        totalTripExpenses: Types.Decimal128,
     }],
     expenses: [{
-        student_name: String,
+        studentName: String,
         amount: Types.Decimal128,
         type: String,
         date: Date

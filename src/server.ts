@@ -1,12 +1,14 @@
 import cors from 'cors';
 import mongoose from 'mongoose';
-import routes from './routes/trip.route';
 import helmet from 'helmet';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { config } from "dotenv";
-import { app } from './app'
+import { app } from './app';
 import { seedTrips } from './gateways/trip.gateway';
+import apollo from './apollo';
+import { config } from "dotenv";
 config();
+
+
 
 const PORT = process.env.PORT || 3033;
 
@@ -16,9 +18,9 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(helmet());
+//app.use(helmet());
 
-routes(app);
+apollo.applyMiddleware({app});
 
 const mongoServer = new MongoMemoryServer();
 
