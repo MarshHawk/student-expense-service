@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLID } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { addExpenseToTrip } from '../../gateways/trip.gateway';
 import { tripType } from '../types/trip.type';
-import { GraphQLNonEmptyString } from 'graphql-scalars';
+import { GraphQLNonEmptyString, GraphQLNonNegativeFloat } from 'graphql-scalars';
 
 export const addExpenseMutation = mutationWithClientMutationId({
     name: 'AddExpenseToTrip',
@@ -14,7 +14,7 @@ export const addExpenseMutation = mutationWithClientMutationId({
             type: new GraphQLNonNull(GraphQLNonEmptyString),
         },
         amount: {
-            type: new GraphQLNonNull(GraphQLNonEmptyString),
+            type: new GraphQLNonNull(GraphQLNonNegativeFloat),
         }
     },
     outputFields: {
