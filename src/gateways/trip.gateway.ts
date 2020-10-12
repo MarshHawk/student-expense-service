@@ -1,14 +1,33 @@
 import { Request, Response } from "express";
 import mongoose from 'mongoose';
 import { tripSchema } from '../models/trip.model';
+import { IExpense } from "../interfaces";
 
 const Trip = mongoose.model('Trip', tripSchema);
+
+// Reads
 
 export const getTrips = (): Promise<any[]> => {
     return Trip.aggregate([
         { $project: { _id: 0 } }
     ]).exec();
 }
+
+// Writes
+
+export const addExpenseToTrip = (tripId: string, studentName: string, amount: number): Promise<any[]> => {
+    throw 'Not implemented'
+}
+
+export const addStudentToTrip = (): Promise<any[]> => {
+    throw 'Not implemented'
+}
+
+export const removeExpenseFromTrip = (): Promise<any[]> => {
+    throw 'Not implemented'
+}
+
+// ToDo add remove trips, payments
 
 export const seedTrips = async () => {
     const trips = [{

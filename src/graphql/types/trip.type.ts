@@ -1,7 +1,9 @@
-import { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLFloat, GraphQLList } from 'graphql';
-import { GraphQLDateTime, } from 'graphql-scalars';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLFloat, GraphQLList, GraphQLID } from 'graphql';
+import { GraphQLDateTime, GraphQLNonEmptyString, GraphQLNonNegativeFloat, } from 'graphql-scalars';
 import tripEventType from './trip-event.type';
 import studentType from './student.type';
+import { mutationWithClientMutationId } from 'graphql-relay';
+import { addExpenseToTrip } from '../../gateways/trip.gateway';
 
 /* const { nodeInterface, nodeField } = nodeDefinitions(
     (globalId) => {
@@ -17,7 +19,7 @@ import studentType from './student.type';
   ); */
 
 // TODO: node interface and global id
-export default new GraphQLObjectType({
+export const tripType = new GraphQLObjectType({
     name: 'Trip',
     //interfaces: [nodeInterface],
     fields: () => ({
