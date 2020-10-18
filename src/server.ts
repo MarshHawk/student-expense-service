@@ -8,8 +8,6 @@ import apollo from './apollo';
 import { config } from "dotenv";
 config();
 
-
-
 const PORT = process.env.PORT || 3033;
 
 // TODO cors .env configuration
@@ -25,13 +23,13 @@ apollo.applyMiddleware({app});
 const mongoServer = new MongoMemoryServer();
 
 // mongodb-memory-server is only used to ship this exercise with npm install only
-mongoServer.getUri().then((mongoUri) => {
+//mongoServer.getUri().then((mongoUri) => {
     // ${process.env.MONGO_URI}/${process.env.DATABASE_NAME}
-    mongoose.connect(`${mongoUri}`, { useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
+    mongoose.connect(`${process.env.MONGO_URI}/${process.env.DATABASE_NAME}`, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
         await seedTrips();
         app.listen(PORT, () => {
             console.log(`Your server is running on port ${PORT}`);
         });
     });
-});
+//});
 

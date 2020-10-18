@@ -1,26 +1,53 @@
 import mongoose from 'mongoose';
 import { tripSchema } from '../models/trip.model';
 import { ITrip } from "../interfaces";
+import { fromGlobalId } from 'graphql-relay';
+import { tripFieldsStage } from '../aggregation.builder';
 
 const Trip = mongoose.model('Trip', tripSchema);
 
 // Reads
 
-export const getTrips = (): Promise<ITrip[]> => {
-    return Trip.aggregate<ITrip>([
-        { $addFields: { id: { $toString: "$_id" } } },
+export const getTrips = async (): Promise<ITrip[]> => {
+    return await Trip.aggregate<ITrip>([
+        tripFieldsStage(),
         { $project: { _id: 0 } }
     ]).exec();
 }
 
-export const getTripById = (id: string): Promise<ITrip> => {
-    throw 'Not implemented'
+export const getTripById = async (id: string): Promise<ITrip> => {
+    // TODO: DRYer please
+    const ObjectId = mongoose.Types.ObjectId;
+    const toDecimal128 = (value: number): any => mongoose.Types.Decimal128.fromString(value.toString());
+    console.log(await Trip.aggregate([{ $match: { _id: ObjectId(id) } }, tripFieldsStage()]).exec())
+    return Trip.aggregate([{ $match: { _id: ObjectId(id) } }, tripFieldsStage()]).exec().then((result: ITrip[]) => result[0]);
 }
 
 // Writes
 
-export const addExpenseToTrip = (tripId: string, studentName: string, amount: number): Promise<any[]> => {
-    throw 'Not implemented'
+export const addExpenseToTrip = async (tripId: string, studentName: string, amount: number) => {
+    // TODO: DRYer please
+    const id = fromGlobalId(tripId).id;
+    const ObjectId = mongoose.Types.ObjectId;
+    const toDecimal128 = (value: number): any => mongoose.Types.Decimal128.fromString(value.toString());
+    const trip = await Trip.updateOne(
+        { _id: ObjectId(id) },
+        [{
+            $set: {
+                total: { $sum: ["$total", toDecimal128(amount)] },
+                expenses: { $concatArrays: ['$expenses', [{ studentName: studentName, amount: toDecimal128(amount) }]] },
+                students: {
+                    $map: {
+                        input: "$students", as: "s",
+                        in: {
+                            $cond: { if: { $eq: ['$$s.name', studentName] }, then: { name: '$$s.name', totalTripExpenses: { $sum: ["$$s.amount", toDecimal128(amount)] } }, else: '$$s' }
+                        }
+                    }
+                }
+            }
+        }
+        ]
+    ).exec();
 }
 
 export const addStudentToTrip = (): Promise<any[]> => {
@@ -31,7 +58,7 @@ export const removeExpenseFromTrip = (): Promise<any[]> => {
     throw 'Not implemented'
 }
 
-// ToDo add remove trips, payments
+// TODO add remove trips, payments
 
 export const seedTrips = async () => {
     const trips = [{

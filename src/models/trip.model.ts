@@ -14,7 +14,7 @@ export const tripSchema = new Schema({
     expenses: [{
         studentName: String,
         amount: Types.Decimal128,
-        type: String,
-        date: Date
+        //type: String,
+        //date: Date
       }]
   }, { timestamps: true });

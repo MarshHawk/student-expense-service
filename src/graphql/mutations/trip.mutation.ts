@@ -1,6 +1,6 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { addExpenseToTrip } from '../../gateways/trip.gateway';
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay';
+import { addExpenseToTrip, getTripById } from '../../gateways/trip.gateway';
 import { tripType } from '../types/trip.type';
 import { GraphQLNonEmptyString, GraphQLNonNegativeFloat } from 'graphql-scalars';
 
@@ -19,11 +19,12 @@ export const addExpenseMutation = mutationWithClientMutationId({
     },
     outputFields: {
         trip: {
-            type: tripType
+            type: tripType,
+            resolve: (payload) => getTripById(fromGlobalId(payload.tripId).id)
         }
     },
     mutateAndGetPayload: ({ tripId, studentName, amount }) => {
-        const trip = addExpenseToTrip(tripId, studentName, amount);
-        return { trip };
+        addExpenseToTrip(tripId, studentName, amount);
+        return { tripId };
     },
 });
