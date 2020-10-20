@@ -3,7 +3,7 @@ import { getTrips } from "../gateways/trip.gateway";
 
 const routes = (app: Express) => {
     app.route('/trips')
-        .get(getTrips)
+        .get((req, res) => getTrips().then((result) => res.json(result)))
 }
 
 export default routes;

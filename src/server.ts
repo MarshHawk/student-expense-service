@@ -6,6 +6,7 @@ import { app } from './app';
 import { seedTrips } from './gateways/trip.gateway';
 import apollo from './apollo';
 import { config } from "dotenv";
+import routes from './routes/trip.route';
 config();
 
 const PORT = process.env.PORT || 3033;
@@ -16,12 +17,13 @@ app.use(cors({
     credentials: true
 }));
 
-//app.use(helmet());
+app.use(helmet());
+
+routes(app);
 
 apollo.applyMiddleware({app});
 
-const mongoServer = new MongoMemoryServer();
-
+//const mongoServer = new MongoMemoryServer();
 // mongodb-memory-server is only used to ship this exercise with npm install only
 //mongoServer.getUri().then((mongoUri) => {
     // ${process.env.MONGO_URI}/${process.env.DATABASE_NAME}
