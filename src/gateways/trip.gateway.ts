@@ -1,23 +1,50 @@
 import mongoose from 'mongoose';
 import { tripSchema } from '../models/trip.model';
 import { ITrip } from "../interfaces";
-import { tripFieldsStage } from '../aggregation.builder';
 
 const Trip = mongoose.model('Trip', tripSchema);
 const toDecimal128 = (value: number): mongoose.Types.Decimal128 => mongoose.Types.Decimal128.fromString(value.toString());
 const toObjectId = (value: string): mongoose.Types.ObjectId => mongoose.Types.ObjectId(value);
 
+export const projectTripFieldDecimalFieldsAsDoubles = () => ({
+    $addFields: {
+        id: { $toString: "$_id" },
+        total: { $toDouble: "$total" },
+        average: { $toDouble: "$average" },
+        expenses: {
+            "$map": {
+                "input": "$expenses",
+                "as": "row",
+                "in": {
+                    studentName: "$$row.studentName",
+                    amount: { $toDouble: "$$row.amount" }
+                }
+            }
+        },
+        students: {
+            "$map": {
+                "input": "$students",
+                "as": "row",
+                "in": {
+                    name: "$$row.name",
+                    totalTripExpenses: { $toDouble: "$$row.totalTripExpenses" }
+                }
+            }
+        }
+    }
+})
+
 // Reads
 
 export const getTrips = async (): Promise<ITrip[]> => {
     return await Trip.aggregate<ITrip>([
-        tripFieldsStage(),
+        projectTripFieldDecimalFieldsAsDoubles(),
         { $project: { _id: 0 } }
     ]).exec();
 }
 
 export const getTripById = async (id: string): Promise<ITrip> => {
-    return Trip.aggregate([{ $match: { _id: toObjectId(id) } }, tripFieldsStage()]).exec().then((result: ITrip[]) => result[0]);
+    return Trip.aggregate([{ $match: { _id: toObjectId(id) } }, projectTripFieldDecimalFieldsAsDoubles()]).exec().then((result: ITrip[]) => result[0]);
 }
 
 // Writes
@@ -33,11 +60,14 @@ export const addExpenseToTrip = async (tripId: string, studentName: string, amou
                     $map: {
                         input: "$students", as: "s",
                         in: {
-                            $cond: { if: { $eq: ['$$s.name', studentName] }, then: { name: '$$s.name', totalTripExpenses: { $sum: ["$$s.totalTripExpenses", toDecimal128(amount)] } }, else: '$$s' }
+                            $cond: {
+                                if: { $eq: ['$$s.name', studentName] },
+                                then: { name: '$$s.name', totalTripExpenses: { $sum: ["$$s.totalTripExpenses", toDecimal128(amount)] } },
+                                else: '$$s'
+                            }
                         }
                     }
-                },
-                average: { $round: [{ $avg: "$students.totalTripExpenses" }, 2] }
+                }
             },
         }, { $set: { average: { $round: [{ $avg: "$students.totalTripExpenses" }, 2] } } }
         ]
