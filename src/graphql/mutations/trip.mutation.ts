@@ -23,8 +23,9 @@ export const addExpenseMutation = mutationWithClientMutationId({
             resolve: (payload) => getTripById(fromGlobalId(payload.tripId).id)
         }
     },
-    mutateAndGetPayload: ({ tripId, studentName, amount }) => {
-        addExpenseToTrip(tripId, studentName, amount);
+    mutateAndGetPayload: async ({ tripId, studentName, amount }) => {
+        const id = fromGlobalId(tripId).id;
+        await addExpenseToTrip(id, studentName, amount);
         return { tripId };
     },
 });

@@ -2,6 +2,7 @@ export const tripFieldsStage = () => ({
     $addFields: {
         id: { $toString: "$_id" },
         total: { $toDouble: "$total" },
+        average: { $toDouble: "$average" },
         expenses: {
             "$map": {
                 "input": "$expenses",

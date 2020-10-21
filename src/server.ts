@@ -17,21 +17,24 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(helmet());
+if (process.env.DEPLOYED) {
+    // helmet blocks graphql playground
+    // TODO: look into disabling specific feature blocking the loading of remote assets
+    app.use(helmet());
+}
 
 routes(app);
 
-apollo.applyMiddleware({app});
+apollo.applyMiddleware({ app });
 
 //const mongoServer = new MongoMemoryServer();
 // mongodb-memory-server is only used to ship this exercise with npm install only
 //mongoServer.getUri().then((mongoUri) => {
-    // ${process.env.MONGO_URI}/${process.env.DATABASE_NAME}
-    mongoose.connect(`${process.env.MONGO_URI}/${process.env.DATABASE_NAME}`, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
-        await seedTrips();
-        app.listen(PORT, () => {
-            console.log(`Your server is running on port ${PORT}`);
-        });
+mongoose.connect(`${process.env.MONGO_URI}/${process.env.DATABASE_NAME}`, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
+    await seedTrips();
+    app.listen(PORT, () => {
+        console.log(`Your server is running on port ${PORT}`);
     });
+});
 //});
 
