@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
+import { ITrip } from 'student-expense-types';
 import { tripSchema } from '../models/trip.model';
-import { ITrip } from "../interfaces";
 
 const Trip = mongoose.model('Trip', tripSchema);
 const toDecimal128 = (value: number): mongoose.Types.Decimal128 => mongoose.Types.Decimal128.fromString(value.toString());
@@ -44,7 +44,7 @@ export const getTrips = async (): Promise<ITrip[]> => {
 }
 
 export const getTripById = async (id: string): Promise<ITrip> => {
-    return Trip.aggregate([{ $match: { _id: toObjectId(id) } }, projectTripFieldDecimalFieldsAsDoubles()]).exec().then((result: ITrip[]) => result[0]);
+    return await Trip.aggregate([{ $match: { _id: toObjectId(id) } }, projectTripFieldDecimalFieldsAsDoubles()]).exec().then((result: ITrip[]) => result[0]);
 }
 
 // Writes

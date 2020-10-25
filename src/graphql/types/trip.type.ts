@@ -4,7 +4,7 @@ import tripEventType from './trip-event.type';
 import studentType from './student.type';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from '../node';
-import { ITrip } from '../../interfaces';
+import { ITrip } from 'student-expense-types';
 
 // TODO: node interface and global id
 export const tripType: GraphQLObjectType<ITrip, any> = new GraphQLObjectType({

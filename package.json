@@ -41,6 +41,7 @@
     "graphql-relay": "^0.6.0",
     "graphql-scalars": "^1.4.0",
     "helmet": "^4.1.1",
-    "mongoose": "^5.10.7"
+    "mongoose": "^5.10.7",
+    "student-expense-types": "^1.0.0"
   }
 }
